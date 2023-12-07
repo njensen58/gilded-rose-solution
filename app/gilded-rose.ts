@@ -1,3 +1,4 @@
+import { AGED_BRIE, CONJURED, BACKSTAGE_PASSES, SULFURAS } from "./constants";
 export class Item {
   name: string;
   sellIn: number;
@@ -17,53 +18,65 @@ export class GildedRose {
     this.items = items;
   }
 
-  updateQuality() {
+  public updateQuality(): Item[] {
     for (let i = 0; i < this.items.length; i++) {
-      if (this.items[i].name != 'Aged Brie' && this.items[i].name != 'Backstage passes to a TAFKAL80ETC concert') {
-        if (this.items[i].quality > 0) {
-          if (this.items[i].name != 'Sulfuras, Hand of Ragnaros') {
-            this.items[i].quality = this.items[i].quality - 1
-          }
+      const curr = this.items[i];
+      switch (curr.name) {
+        case SULFURAS: {
+          break;
         }
-      } else {
-        if (this.items[i].quality < 50) {
-          this.items[i].quality = this.items[i].quality + 1
-          if (this.items[i].name == 'Backstage passes to a TAFKAL80ETC concert') {
-            if (this.items[i].sellIn < 11) {
-              if (this.items[i].quality < 50) {
-                this.items[i].quality = this.items[i].quality + 1
-              }
-            }
-            if (this.items[i].sellIn < 6) {
-              if (this.items[i].quality < 50) {
-                this.items[i].quality = this.items[i].quality + 1
-              }
-            }
-          }
+        case AGED_BRIE: {
+          this.updateBrie(curr);
+          break;
         }
-      }
-      if (this.items[i].name != 'Sulfuras, Hand of Ragnaros') {
-        this.items[i].sellIn = this.items[i].sellIn - 1;
-      }
-      if (this.items[i].sellIn < 0) { // Sulfuras case
-        if (this.items[i].name != 'Aged Brie') {
-          if (this.items[i].name != 'Backstage passes to a TAFKAL80ETC concert') {
-            if (this.items[i].quality > 0) {
-              if (this.items[i].name != 'Sulfuras, Hand of Ragnaros') {
-                this.items[i].quality = this.items[i].quality - 1
-              }
-            }
-          } else {
-            this.items[i].quality = this.items[i].quality - this.items[i].quality
-          }
-        } else {
-          if (this.items[i].quality < 50) {
-            this.items[i].quality = this.items[i].quality + 1
-          }
+        case BACKSTAGE_PASSES: {
+          this.updateBackstagePasses(curr);
+          break;
         }
+        // All other items with no special cases
+        default:
+          this.updateStandardItem(curr);
+          break;
       }
     }
 
     return this.items;
+  }
+
+  private updateBrie(brie): void {
+    if (brie.quality < 50) {
+      if (brie.sellIn > 0) {
+        brie.quality += 1
+      } else {
+        brie.quality = Math.min(brie.quality + 2 || 50);
+      }
+    }
+    brie.sellIn -= 1;
+  }
+
+  private updateBackstagePasses(pass): void {
+    if (pass.sellIn <= 0) {
+      pass.sellIn -= 1;
+      pass.quality = 0;
+      return;
+    }
+
+    if (pass.sellIn > 10) {
+      pass.quality = Math.min(pass.quality + 1, 50);
+    } else if (pass.sellIn > 5) {
+      pass.quality = Math.min(pass.quality + 2, 50);
+    } else if (pass.sellIn > 0) {
+      pass.quality = Math.min(pass.quality + 3, 50);
+    }
+    pass.sellIn -= 1;
+  }
+
+  private updateStandardItem(item): void {
+    if (item.sellIn > 0) {
+      item.quality = Math.max(item.quality - 1, 0);
+    } else {
+      item.quality = Math.max(item.quality - 2, 0);
+    }
+    item.sellIn -= 1;
   }
 }
