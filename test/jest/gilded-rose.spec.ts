@@ -73,9 +73,42 @@ describe(BACKSTAGE_PASSES, () => {
   });
 });
 
+describe(CONJURED, () => {
+  it("always has a quality >= 0", () => {
+    const gildedRose = new GildedRose([
+      new Item(CONJURED, 5, 0),
+      new Item(CONJURED, -1, 1)
+    ])
+    const items = gildedRose.updateQuality();
+    expect(items[0].quality).toBe(0);
+    expect(items[0].sellIn).toBe(4);
+    expect(items[1].quality).toBe(0);
+    expect(items[1].sellIn).toBe(-2);
+  });
+
+  it("reduces the sellin by 1 and quality by 2 if sellin > 0", () => {
+    const gildedRose = new GildedRose([new Item(CONJURED, 5, 3)]);
+    const items = gildedRose.updateQuality();
+    expect(items[0].quality).toBe(1);
+    expect(items[0].sellIn).toBe(4);
+  });
+
+  it("reduces the sellin by 1 and quality by 4 if sellin <= 0", () => {
+    const gildedRose = new GildedRose([
+      new Item(CONJURED, 0, 5),
+      new Item(CONJURED, -1, 5)
+    ]);
+    const items = gildedRose.updateQuality();
+    expect(items[0].quality).toBe(1);
+    expect(items[0].sellIn).toBe(-1);
+    expect(items[1].quality).toBe(1);
+    expect(items[1].sellIn).toBe(-2);
+  });
+});
+
 
 describe("All other items", () => {
-  it("has always quality >= 0", () => {
+  it("always has quality >= 0", () => {
     const gildedRose = new GildedRose([
       new Item("Golden Gun", 5, 0),
       new Item("Golden Gun", -1, 1)
@@ -85,16 +118,16 @@ describe("All other items", () => {
     expect(items[0].sellIn).toBe(4);
     expect(items[1].quality).toBe(0);
     expect(items[1].sellIn).toBe(-2);
-  })
+  });
 
-  it("reduces the sellin and quality by 1 if sellin > 0", () => {
+  it("reduces the sellin by 1 and quality by 1 if sellin > 0", () => {
     const gildedRose = new GildedRose([new Item("Golden Gun", 5, 1)]);
     const items = gildedRose.updateQuality();
     expect(items[0].quality).toBe(0);
     expect(items[0].sellIn).toBe(4);
   });
 
-  it("reduces the sellin and quality by 2 if sellin <= 0", () => {
+  it("reduces the sellin by 1 and quality by 2 if sellin <= 0", () => {
     const gildedRose = new GildedRose([
       new Item("Golden Gun", 0, 1),
       new Item("Golden Gun", -1, 2)
