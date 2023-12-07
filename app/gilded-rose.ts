@@ -33,6 +33,10 @@ export class GildedRose {
           this.updateBackstagePasses(curr);
           break;
         }
+        case CONJURED: {
+          this.updateConjuredItem(curr);
+          break;
+        }
         // All other items with no special cases
         default:
           this.updateStandardItem(curr);
@@ -78,5 +82,14 @@ export class GildedRose {
       item.quality = Math.max(item.quality - 2, 0);
     }
     item.sellIn -= 1;
+  }
+
+  private updateConjuredItem(item): void {
+    if (item.sellIn > 0) {
+      item.quality = Math.max(item.quality - 2, 0);
+    } else {
+      item.quality = Math.max(item.quality - 4, 0);
+    }
+    item.sellIn -= 1
   }
 }
