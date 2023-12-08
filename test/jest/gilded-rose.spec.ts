@@ -1,9 +1,14 @@
 import { Item, GildedRose } from '@/gilded-rose';
 import { AGED_BRIE, SULFURAS, BACKSTAGE_PASSES, CONJURED } from '@/constants';
-import ItemUpdaterService from '../../app/itemUpdaterService';
+import UpdateItemService from '../../app/updateItemService';
 
 describe("GildedRose class", () => {
-  const service = new ItemUpdaterService();
+  it("should instantiate an ItemUpdaterService by default", () => {
+    const gildedRose = new GildedRose([new Item(AGED_BRIE, 10, 50)]);
+    expect(gildedRose.updateItemService).toBeInstanceOf(UpdateItemService);
+  });
+
+  const service = new UpdateItemService();
   const brieSpy = jest.spyOn(service, 'brie');
   const backstageSpy = jest.spyOn(service, 'backstagePasses');
   const conjuredSpy = jest.spyOn(service, 'conjuredItem');
