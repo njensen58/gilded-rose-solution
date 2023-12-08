@@ -1,4 +1,4 @@
-import ItemUpdaterService from "./itemUpdaterService";
+import UpdateItemService from "./updateItemService";
 import { AGED_BRIE, CONJURED, BACKSTAGE_PASSES, SULFURAS } from "./constants";
 export class Item {
   name: string;
@@ -14,11 +14,11 @@ export class Item {
 
 export class GildedRose {
   items: Array<Item>;
-  updateItem: ItemUpdaterService;
+  updateItemService: UpdateItemService;
 
-  constructor(items = [] as Array<Item>, updateItem = new ItemUpdaterService()) {
+  constructor(items = [] as Array<Item>, updateItemService = new UpdateItemService()) {
     this.items = items;
-    this.updateItem = updateItem;
+    this.updateItemService = updateItemService;
   }
 
   public updateQuality(): Item[] {
@@ -28,19 +28,19 @@ export class GildedRose {
           break;
         }
         case AGED_BRIE: {
-          this.updateItem.brie(item);
+          this.updateItemService.brie(item);
           break;
         }
         case BACKSTAGE_PASSES: {
-          this.updateItem.backstagePasses(item);
+          this.updateItemService.backstagePasses(item);
           break;
         }
         case CONJURED: {
-          this.updateItem.conjuredItem(item);
+          this.updateItemService.conjuredItem(item);
           break;
         }
         default:
-          this.updateItem.standardItem(item);
+          this.updateItemService.standardItem(item);
           break;
       }
     }

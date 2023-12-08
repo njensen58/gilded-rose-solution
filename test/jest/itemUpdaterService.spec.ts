@@ -1,14 +1,14 @@
 import { Item } from '@/gilded-rose';
 import { AGED_BRIE, BACKSTAGE_PASSES, CONJURED } from '@/constants';
-import ItemUpdaterService from '../../app/itemUpdaterService';
+import UpdateItemService from '../../app/updateItemService';
 
 describe("Item Updater Service", () => {
-    const service = new ItemUpdaterService();
+    const service = new UpdateItemService();
 
     describe(AGED_BRIE, () => {
         it("should never have a quality > 50", () => {
             const item = new Item(AGED_BRIE, 10, 50);
-            service.brie(item);;
+            service.brie(item);
             expect(item.quality).toBe(50);
             expect(item.sellIn).toBe(9);
         });
